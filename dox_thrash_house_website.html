@@ -1,0 +1,1353 @@
+        addTestimonials();
+
+        // Blog functionality
+        function initializeBlog() {
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.blog-filter');
+            const blogPosts = document.querySelectorAll('.blog-post');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+
+                    const category = button.dataset.category;
+
+                    blogPosts.forEach(post => {
+                        if (category === 'all' || post.dataset.category.includes(category)) {
+                            post.style.display = 'block';
+                            post.style.opacity = '1';
+                        } else {
+                            post.style.display = 'none';
+                            post.style.opacity = '0';
+                        }
+                    });
+                });
+            });
+
+            // Read more functionality
+            const readMoreButtons = document.querySelectorAll('.blog-read-more');
+            readMoreButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    const post = button.closest('.blog-post');
+                    const title = post.querySelector('.blog-title').textContent;
+                    
+                    // Simulate opening full article
+                    const modal = createArticleModal(title, index);
+                    document.body.appendChild(modal);
+                });
+            });
+        }
+
+        function createArticleModal(title, index) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            `;
+
+            const content = getFullArticleContent(index);
+            
+            modal.innerHTML = `
+                <div style="background: white; max-width: 800px; max-height: 90vh; overflow-y: auto; border-radius: 15px; padding: 2rem; position: relative;">
+                    <button onclick="this.closest('.modal').remove()" style="position: absolute; top: 1rem; right: 1rem; background: #d4af37; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold;">×</button>
+                    <h2 style="color: #1a1a1a; margin-bottom: 1rem;">${title}</h2>
+                    <div style="color: #555; line-height: 1.7;">
+                        ${content}
+                    </div>
+                    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; text-align: center;">
+                        <button onclick="window.open('mailto:blog@doxthrashhouse.org?subject=Article Response: ${encodeURIComponent(title)}')" style="background: #d4af37; color: #1a1a1a; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 1rem;">Respond to this Article</button>
+                        <button onclick="navigator.share ? navigator.share({title: '${title}', url: window.location.href}) : alert('Copy this URL to share: ' + window.location.href)" style="background: #1a1a1a; color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Share Article</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.className = 'modal';
+            return modal;
+        }
+
+        function getFullArticleContent(index) {
+            const articles = [
+                // Revolutionary Printmaking
+                `<p><strong>By Community Research Team | June 10, 2025</strong></p>
+                <p>When we talk about Dox Thrash's revolutionary contribution to art, we're not just talking about technique—we're talking about power. The Carborundum printmaking process that Thrash co-invented in the 1940s wasn't just an artistic breakthrough; it was a direct challenge to the gatekeeping that had kept working-class artists, particularly Black artists, locked out of fine art production.</p>
+                
+                <p>Traditional intaglio printmaking required expensive copper plates, specialized presses, and access to well-equipped studios—barriers that effectively excluded most artists of color from participating in what was considered "serious" printmaking. When Thrash and his colleague Michael Gallagher developed the Carborundum process, they created a method that could produce rich, textured prints using affordable materials and simpler equipment.</p>
+                
+                <p>But Thrash didn't just democratize the technical process—he revolutionized the subject matter. His prints documented the daily life, struggles, and dignity of working-class Black Philadelphians at a time when such imagery was largely absent from gallery walls. Works like "Cabin Night" and "Morning Sun" weren't just beautiful—they were political statements about whose lives deserved artistic attention.</p>
+                
+                <p>This is why preserving the Dox Thrash House and securing historic district designation for Sharswood matters. We're not just preserving a building—we're preserving the legacy of an artist who understood that innovation without liberation is meaningless, and that true revolution happens when we change both how art is made and who gets to make it.</p>`,
+
+                // Property Taxes
+                `<p><strong>By Housing Justice Committee | June 8, 2025</strong></p>
+                <p>Let's address the elephant in the room: "Will historic designation raise my property taxes?" It's a legitimate concern, and we're not going to sugarcoat the complexities. But the research shows that community-controlled historic designation can actually protect long-term residents from the tax pressures of gentrification.</p>
+                
+                <p>Here are the facts: In Philadelphia, properties in local historic districts are eligible for tax abatements and credits for rehabilitation work. The city offers a 10-year property tax abatement for substantial improvements to historic properties, and homeowners can access grants and low-interest loans specifically for historic preservation work.</p>
+                
+                <p>More importantly, historic designation provides regulatory tools to prevent rapid neighborhood change that typically drives up property values and taxes. When developers can't demolish historic buildings for luxury condos, it slows the speculation that fuels displacement.</p>
+                
+                <p>We're also organizing around community benefit agreements that would ensure any increased property values benefit current residents, not just incoming developers. This includes advocating for senior property tax freezes, expanded homestead exemptions, and community land trust options.</p>
+                
+                <p>The real threat to affordability isn't historic designation—it's uncontrolled development and speculation. Historic designation gives us tools to fight back.</p>`,
+
+                // Pyramid Club
+                `<p><strong>By Dr. Sarah Johnson, Community Historian | June 5, 2025</strong></p>
+                <p>The Pyramid Club wasn't just where Philadelphia's Black elite gathered for dinner parties—it was where they planned the strategies that would reshape the city. Founded in 1937 at 1517 Girard Avenue, the club served as headquarters for a generation of African American professionals who understood that social change required both individual excellence and collective action.</p>
+                
+                <p>Members included doctors, lawyers, teachers, and business owners who had broken through barriers to achieve professional success, but who recognized that their individual achievements meant nothing without community liberation. The club's mission—"cultural, civic and social advancement of Negroes in Philadelphia"—wasn't about assimilation; it was about building power.</p>
+                
+                <p>The club provided crucial support to artists like Dox Thrash, offering both financial backing and a network of collectors who understood the political importance of supporting Black cultural production. When Thrash needed materials for his experimental printmaking, when he needed exhibition space, when he needed an audience that understood the revolutionary potential of his work—the Pyramid Club provided that foundation.</p>
+                
+                <p>But the club also incubated the civil rights organizing that would explode in the 1960s. Members were early supporters of the legal challenges to segregated education that would eventually lead to Cecil B. Moore's Girard College campaign. They funded voter registration drives, supported economic boycotts, and provided the professional credibility that legitimized more militant organizing strategies.</p>
+                
+                <p>When the club closed in 1963, it wasn't because the work was done—it was because the movement had moved beyond the confines of elite organizing into the streets, into mass action, into the kind of community-wide mobilization that historic district designation represents today.</p>`,
+
+                // Community Voice
+                `<p><strong>By Marcus Williams, Third-Generation Resident | June 3, 2025</strong></p>
+                <p>My grandmother Dolores Washington used to say, "Baby, this neighborhood was built by people who refused to be broken." She lived on Cecil B. Moore Avenue from 1955 until she passed in 2018, and every conversation with her was a history lesson I didn't fully appreciate until I started organizing around historic designation.</p>
+                
+                <p>Grandma Dolores was 28 years old when Cecil B. Moore started the Girard College picket in 1965. She'd take me past that fence and tell me about how she'd walk past those protesters every day on her way to her job at the Women's Medical College laundry. "Some days there were five people," she'd say. "Some days there were five hundred. But every day, there was somebody standing up."</p>
+                
+                <p>She knew families connected to the Pyramid Club—"Those folks had money, but they never forgot where they came from," she'd tell me. She'd point out houses where club members lived, tell me about the parties where they'd raise funds for community causes, about how they'd hire local kids for catering jobs that helped families pay rent.</p>
+                
+                <p>But Grandma Dolores also saw how the neighborhood changed. She watched families get priced out in the 1990s, watched young people move away because there weren't opportunities, watched buildings sit empty while people needed housing. "The problem isn't that things change," she'd say. "The problem is when change happens TO us instead of BY us."</p>
+                
+                <p>That's why I'm fighting for historic designation. Not to freeze the neighborhood in amber, but to make sure that when change comes—and it's coming—it's guided by the values and the vision of the people who built this community with their bare hands and their unbreakable spirits.</p>`,
+
+                // Housing Justice
+                `<p><strong>By Sharswood Tenants Union | May 30, 2025</strong></p>
+                <p>Gentrification is not a natural disaster. It's a policy choice, and historic designation can be part of the solution if we do it right. Around the country, communities have used historic designation as a tool FOR residents, not against them—but it requires organizing and community control from day one.</p>
+                
+                <p>In Savannah's Victorian District, residents organized to ensure that historic designation came with tenant protections and affordable housing requirements. In D.C.'s Dupont Circle, community organizations used historic status to block luxury developments that would have displaced longtime residents. In San Antonio's Eastside, historic designation became the foundation for a community land trust that keeps property permanently affordable.</p>
+                
+                <p>Here in Sharswood, we're building on these models. Our historic district proposal includes community benefit agreements that would:</p>
+                <ul>
+                <li>Require any new development to include 30% affordable units</li>
+                <li>Establish right of first refusal for longtime residents when properties are sold</li>
+                <li>Create a community-controlled fund for home repairs and preservation</li>
+                <li>Mandate community review of any development projects</li>
+                <li>Protect existing tenants from displacement during renovation</li>
+                </ul>
+                
+                <p>But community benefit agreements only work if the community is organized to enforce them. That's why we're building tenant unions, homeowner associations, and neighborhood councils that can hold developers and the city accountable.</p>
+                
+                <p>Historic designation without community power is just aesthetics. But historic designation WITH community power can be a foundation for the kind of development we want—development that honors our history while building our future.</p>`,
+
+                // Black Panthers
+                `<p><strong>By Revolutionary History Collective | May 28, 2025</strong></p>
+                <p>When most people think about the Black Panthers, they think about Oakland, they think about berets and leather jackets, they think about armed self-defense. All of that was real, but it was only part of the story. In Philadelphia, in neighborhoods like Sharswood, the Panthers built something equally revolutionary: community infrastructure that kept people alive and fighting.</p>
+                
+                <p>The Sharswood Panthers operated out of storefronts and community centers, running breakfast programs that fed hundreds of kids every morning before school. They organized free health clinics staffed by sympathetic doctors and nurses. They created educational programs that taught Black history when schools refused to. They organized legal clinics that helped families fight evictions and police harassment.</p>
+                
+                <p>But the Panthers also understood that revolution wasn't just about providing services—it was about building power. In Sharswood, they organized tenant unions that forced slumlords to fix heating and plumbing. They organized welfare rights groups that fought for dignity and adequate support. They organized community defense networks that responded to police violence with documentation, legal support, and collective action.</p>
+                
+                <p>The Panthers saw connections that others missed. They understood that the fight for decent housing was connected to the fight against police brutality, that the fight for quality education was connected to the fight for community control, that the fight for economic justice was connected to the fight for cultural affirmation.</p>
+                
+                <p>This is why our historic district campaign matters to revolutionary history. We're not just preserving buildings—we're preserving the sites where people learned that they could organize to change the conditions of their lives. Every community meeting we hold, every petition        // Dynamic year update
+        const currentYear = new Date().getFullYear();
+        document.querySelector('footer p').innerHTML = 
+            `&copy; ${currentYear} Dox Thrash House Project. Preserving history, building community.`;
+
+        // Content submission handlers
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const buttonText = this.textContent;
+                
+                if (buttonText.includes('Upload Photos')) {
+                    alert('Photo submission portal coming soon! For now, please email photos to info@doxthrashhouse.org or share on Instagram with #SharswardHistory');
+                } else if (buttonText.includes('Share Stories')) {
+                    alert('Oral history collection form coming soon! For now, please email your stories to stories@doxthrashhouse.org or call our community hotline.');
+                } else if (buttonText.includes('Submit Documents')) {
+                    alert('Document submission portal coming soon! Please email scanned documents to documents@doxthrashhouse.org or bring originals to community meetings.');
+                }
+            });
+        });
+
+        // Social media link handlers (replace with actual URLs)
+        document.querySelectorAll('a[href="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const linkText = this.textContent;
+                
+                if (linkText.includes('Follow Us') && this.parentElement.querySelector('h4').textContent === 'Instagram') {
+                    window.open('https://instagram.com/doxthrashhouse', '_blank'); // Replace with actual Instagram
+                } else if (linkText.includes('Like Page')) {
+                    window.open('https://facebook.com/doxthrashhouse', '_blank'); // Replace with actual Facebook
+                } else if (linkText.includes('Follow') && this.parentElement.querySelector('h4').textContent === 'Twitter') {
+                    window.open('https://twitter.com/sharswardhistory', '_blank'); // Replace with actual Twitter
+                }
+            });
+        });
+
+        // Enhanced timeline interactions
+        document.querySelectorAll('.timeline-content').forEach(content => {
+            content.addEventListener('click', function() {
+                // Add expansion capability for timeline items
+                const existingDetails = this.querySelector('.timeline-details');
+                if (existingDetails) {
+                    existingDetails.remove();
+                } else {
+                    const details = document.createElement('div');
+                    details.className = 'timeline-details';
+                    details.style.cssText = `
+                        margin-top: 1rem; 
+                        padding: 1rem; 
+                        background: rgba(212, 175, 55, 0.1); 
+                        border-radius: 5px; 
+                        font-size: 0.9rem;
+                        border-left: 3px solid #d4af37;
+                    `;
+                    
+                    const year = this.querySelector('.timeline-year').textContent;
+                    let detailText = '';
+                    
+                    switch(year) {
+                        case '1860s':
+                            detailText = 'Octavius Catto founded the Philadelphia Pythians in 1865, making it one of the first organized Black baseball teams. The team played against both Black and white teams, helping to break down racial barriers in sports.';
+                            break;
+                        case '1937':
+                            detailText = 'The Pyramid Club operated until 1963, hosting events, supporting community causes, and serving as a gathering place for Philadelphia\'s Black professional class during the Jim Crow era.';
+                            break;
+                        case '1964-1968':
+                            detailText = 'Cecil B. Moore\'s Girard College protest attracted national attention and became a model for sustained civil rights organizing. The victory opened doors for countless African American students.';
+                            break;
+                        default:
+                            detailText = 'Click to learn more about this era in Sharswood\'s history. We\'re collecting more stories and details about each time period.';
+                    }
+                    
+                    details.innerHTML = `<strong>Learn More:</strong> ${detailText}`;
+                    this.appendChild(details);<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dox Thrash House Project - Preserving Sharswood's Legacy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c2c2c;
+            background: linear-gradient(135deg, #f8f6f3 0%, #e8e4df 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #3d3d3d 100%);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="crosshatch" patternUnits="userSpaceOnUse" width="10" height="10"><path d="M0,0 L10,10 M10,0 L0,10" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23crosshatch)"/></svg>');
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .hero-tagline {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0,0,0,0.9);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        .section {
+            padding: 4rem 0;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d4af37, #f4d03f, #d4af37);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #1a1a1a;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #d4af37, #f4d03f);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f6f3, #ffffff);
+            border-radius: 10px;
+            margin: 0 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-year {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #d4af37;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            border: 4px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 400px;
+            background: linear-gradient(135deg, #e8e4df, #d4d0cb);
+            border-radius: 10px;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #d4af37;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* Initiative Cards */
+        .initiative-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .initiative-card {
+            background: linear-gradient(135deg, #ffffff, #f8f6f3);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #d4af37;
+        }
+
+        .initiative-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        /* Engagement Section */
+        .engagement-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #f4d03f, #d4af37);
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                margin-left: 60px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .nav-container {
+                gap: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Blog Styles */
+        .blog-filter {
+            background: transparent;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .blog-filter:hover, .blog-filter.active {
+            background: #d4af37;
+            color: #1a1a1a;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .blog-post {
+            background: linear-gradient(135deg, #ffffff, #f8f6f3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #d4af37;
+            display: block;
+        }
+
+        .blog-post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .blog-post.featured {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f8f6f3, #e8e4df);
+            border-left: 5px solid #1a1a1a;
+        }
+
+        .blog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .blog-category {
+            background: #d4af37;
+            color: #1a1a1a;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .blog-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .blog-title {
+            font-size: 1.4rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .blog-post.featured .blog-title {
+            font-size: 1.8rem;
+        }
+
+        .blog-excerpt {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .blog-excerpt p {
+            margin: 0;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .blog-author {
+            font-weight: 500;
+        }
+
+        .blog-read-time {
+            font-style: italic;
+        }
+
+        .blog-read-more {
+            background: linear-gradient(135deg, #d4af37, #f4d03f);
+            color: #1a1a1a;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .blog-read-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Blog responsive */
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-post.featured {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Dox Thrash House Project</h1>
+                <div class="subtitle">Preserving Sharswood's Historic Legacy</div>
+                <div class="hero-tagline">
+                    Leading the initiative to designate Sharswood as Philadelphia's newest Historic District, honoring the legacy of master printmaker Dox Thrash and celebrating our community's rich cultural heritage.
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#about" class="nav-item">About Dox Thrash</a>
+            <a href="#timeline" class="nav-item">Neighborhood History</a>
+            <a href="#heroes" class="nav-item">Civil Rights Heroes</a>
+            <a href="#blog" class="nav-item">Community Blog</a>
+            <a href="#initiative" class="nav-item">Historic District</a>
+            <a href="#maps" class="nav-item">Maps & Boundaries</a>
+            <a href="#engage" class="nav-item">Get Involved</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="about" class="section">
+            <h2 class="section-title">Dox Thrash: Master of Print</h2>
+            <div class="section-content">
+                <p>Born in 1893, Dox Thrash emerged as one of America's most innovative printmakers, co-inventing the revolutionary Carborundum printmaking process that transformed the art world. His home at 2340 Cecil B. Moore Avenue became not just a residence, but a creative sanctuary where artistic innovation flourished.</p>
+                
+                <p>Thrash's work captured the essence of African American life in Philadelphia, documenting the social and cultural fabric of our community with unprecedented artistic sophistication. His prints, characterized by rich textures and profound emotional depth, earned him recognition in major museums and collections nationwide.</p>
+                
+                <p>The Dox Thrash House stands today as a testament to artistic excellence and community resilience, representing the broader cultural significance of the Sharswood neighborhood as a center of African American artistic and intellectual life.</p>
+            </div>
+        </section>
+
+        <section id="timeline" class="section">
+            <h2 class="section-title">Sharswood Through Time</h2>
+            <div class="section-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1850s-1870s</div>
+                            <h3>Founding Era</h3>
+                            <p>Sharswood emerges as a residential neighborhood with distinctive Philadelphia row houses. The area develops into a community that will become central to Philadelphia's African American history.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1860s</div>
+                            <h3>Octavius Catto & Baseball Integration</h3>
+                            <p>Civil rights pioneer Octavius Catto organizes the Philadelphia Pythians, one of the first Black baseball teams. Catto fights for desegregation of streetcars, schools, and sports, laying groundwork for future civil rights victories.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1893</div>
+                            <h3>Dox Thrash Born</h3>
+                            <p>Dox Thrash is born in Griffin, Georgia, beginning a journey that would eventually lead him to become one of Philadelphia's most celebrated artists and a resident of Sharswood.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1910s-1930s</div>
+                            <h3>Great Migration & Community Building</h3>
+                            <p>During the Great Migration, Sharswood becomes a destination for African Americans seeking opportunity in Philadelphia. Black churches, community organizations, and cultural institutions establish deep roots in the neighborhood.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1937</div>
+                            <h3>Pyramid Club Founded</h3>
+                            <p>The Pyramid Club is established at 1517 Girard Avenue for the "cultural, civic and social advancement of Negroes in Philadelphia," becoming the city's leading African American social club and supporting artists like Dox Thrash.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1940s-1950s</div>
+                            <h3>Artistic Innovation Era</h3>
+                            <p>Dox Thrash co-invents the revolutionary Carborundum printmaking process. His Sharswood studio becomes a center for artistic experimentation, with support from organizations like the Pyramid Club fostering a vibrant creative community.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1950s-1960s</div>
+                            <h3>Women's Medical College & Professional Growth</h3>
+                            <p>The Women's Medical College nearby trains pioneering women doctors, many of whom serve the Sharswood community. The neighborhood becomes home to a growing professional African American middle class.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1964-1968</div>
+                            <h3>Cecil B. Moore & Civil Rights Victory</h3>
+                            <p>Civil rights lawyer Cecil B. Moore leads the historic seven-month picket of Girard College, the longest sustained civil rights action in Philadelphia history. The campaign succeeds in desegregating the institution in 1968.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1965</div>
+                            <h3>Thrash's Artistic Legacy</h3>
+                            <p>Dox Thrash passes away, leaving behind a transformative artistic legacy. His techniques and vision continue to influence printmakers and artists worldwide, while his Sharswood home remains a symbol of creative excellence.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1960s-1970s</div>
+                            <h3>Black Power & Arts Movement</h3>
+                            <p>Sharswood becomes a center for Black Power organizing and the Black Arts Movement. Community centers, cultural organizations, and activists use the neighborhood as a base for social change and artistic expression.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1970s-1980s</div>
+                            <h3>Community Institutions & Cultural Life</h3>
+                            <p>Athletic Recreation Center, Black Panthers organizing, UNIA activities, community photography documentation by photographers like Mosley, and vibrant church life continue to define Sharswood's character.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">1990s-2010s</div>
+                            <h3>Historic Recognition Grows</h3>
+                            <p>Growing recognition of Sharswood's historical significance, with scholars, artists, and community leaders working to document and preserve the neighborhood's remarkable contributions to American culture and civil rights.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2020</div>
+                            <h3>Preservation Renaissance</h3>
+                            <p>Beech Community Services acquires the Dox Thrash House, beginning comprehensive restoration efforts. This marks the start of a new era of historic preservation and community celebration.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-year">2025</div>
+                            <h3>Historic District Campaign</h3>
+                            <p>Launch of the comprehensive campaign to designate Sharswood as Philadelphia's newest Historic District, honoring Dox Thrash, Octavius Catto, Cecil B. Moore, and the countless community members who made this neighborhood a center of African American achievement.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="heroes" class="section">
+            <h2 class="section-title">Civil Rights Heroes of Sharswood</h2>
+            <div class="section-content">
+                <div class="initiative-grid">
+                    <div class="initiative-card">
+                        <div class="card-title">⚾ Octavius Catto (1839-1871)</div>
+                        <p>Pioneering civil rights activist who organized the Philadelphia Pythians baseball team, fought for streetcar desegregation, and championed equal education. Murdered on Election Day 1871 while defending voting rights. His legacy lives on in Sharswood's commitment to equality and justice.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">⚖️ Cecil B. Moore (1915-1979)</div>
+                        <p>Militant civil rights lawyer who led the historic seven-month picket of Girard College, achieving its desegregation in 1968. His house and legacy remain central to Sharswood's identity as a neighborhood of resistance and victory against segregation.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">🎨 Dox Thrash (1893-1965)</div>
+                        <p>Master printmaker who co-invented the Carborundum process, revolutionizing American art. His Sharswood studio became a beacon of artistic innovation, documenting African American life with unprecedented depth and technical brilliance.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">🏛️ The Pyramid Club</div>
+                        <p>Founded in 1937 at 1517 Girard Avenue, this was Philadelphia's leading African American social club, dedicated to "cultural, civic and social advancement." The Pyramid Club supported artists like Dox Thrash and fostered community leadership.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">🏥 Women's Medical Pioneers</div>
+                        <p>The nearby Women's Medical College trained pioneering women doctors who served the Sharswood community. These medical professionals broke barriers and provided crucial healthcare to neighborhood families.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">✊ Black Power Movement</div>
+                        <p>Sharswood served as an organizing hub for Black Power activists, Black Panthers, and the Black Arts Movement. Community centers and cultural spaces nurtured radical political thought and artistic expression.</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #1a1a1a, #3d3d3d); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3 style="color: #d4af37; text-align: center; margin-bottom: 1.5rem;">Historic Landmarks to Preserve</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div>
+                            <h4 style="color: #f4d03f;">🏠 Residential Heritage</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                                <li>• Dox Thrash House (2340 Cecil B. Moore Ave)</li>
+                                <li>• Cecil B. Moore residence</li>
+                                <li>• Historic row house blocks</li>
+                                <li>• Great Migration family homes</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #f4d03f;">🏛️ Institutional Legacy</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                                <li>• Former Pyramid Club site</li>
+                                <li>• Historic Black churches</li>
+                                <li>• Athletic Recreation Center</li>
+                                <li>• UNIA meeting spaces</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #f4d03f;">📚 Educational Sites</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+                                <li>• Vaux High School connections</li>
+                                <li>• Community education centers</li>
+                                <li>• Library branches</li>
+                                <li>• Cultural learning spaces</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="section">
+            <h2 class="section-title">Sharswood Stories: Community Blog & Zine</h2>
+            <div class="section-content">
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">Deep dives into our neighborhood's revolutionary history, community concerns, and the stories that shape our fight for historic designation.</p>
+                
+                <!-- Blog Categories -->
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button class="blog-filter active" data-category="all">All Stories</button>
+                    <button class="blog-filter" data-category="history">Revolutionary History</button>
+                    <button class="blog-filter" data-category="community">Community Issues</button>
+                    <button class="blog-filter" data-category="arts">Arts & Culture</button>
+                    <button class="blog-filter" data-category="voices">Community Voices</button>
+                </div>
+
+                <!-- Featured Articles -->
+                <div class="blog-grid">
+                    <!-- Article 1: Revolutionary Printmaking -->
+                    <article class="blog-post featured" data-category="history arts">
+                        <div class="blog-header">
+                            <span class="blog-category">Revolutionary History</span>
+                            <span class="blog-date">June 10, 2025</span>
+                        </div>
+                        <h3 class="blog-title">The Revolutionary Politics of Printmaking: How Dox Thrash's Art Challenged Power</h3>
+                        <div class="blog-excerpt">
+                            <p>Printmaking wasn't just art—it was revolution. When Dox Thrash co-invented the Carborundum process in 1940s Philadelphia, he didn't just create a new technique; he democratized art-making itself. This revolutionary method allowed artists to create rich, textured prints without expensive equipment, breaking down the barriers that kept working-class artists from accessing fine art techniques...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Community Research Team</span>
+                            <span class="blog-read-time">8 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+
+                    <!-- Article 2: Property Taxes -->
+                    <article class="blog-post" data-category="community">
+                        <div class="blog-header">
+                            <span class="blog-category">Community Issues</span>
+                            <span class="blog-date">June 8, 2025</span>
+                        </div>
+                        <h3 class="blog-title">Historic Designation & Your Property Taxes: What You Need to Know</h3>
+                        <div class="blog-excerpt">
+                            <p>We're hearing concerns about property taxes and historic designation. Let's break down the facts: Historic district status in Philadelphia can actually provide tax benefits and protections for homeowners. Here's what the research shows about property values, tax implications, and community benefits...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Housing Justice Committee</span>
+                            <span class="blog-read-time">5 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+
+                    <!-- Article 3: Pyramid Club -->
+                    <article class="blog-post" data-category="history community">
+                        <div class="blog-header">
+                            <span class="blog-category">Revolutionary History</span>
+                            <span class="blog-date">June 5, 2025</span>
+                        </div>
+                        <h3 class="blog-title">Inside the Pyramid Club: Philadelphia's Black Elite and Community Power</h3>
+                        <div class="blog-excerpt">
+                            <p>From 1937 to 1963, the Pyramid Club at 1517 Girard Avenue was more than a social club—it was a power center. African American professionals gathered here not just for networking, but to plan strategy for civil rights, support community artists like Dox Thrash, and build the economic and political foundation that would fuel the neighborhood's resistance movements...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Dr. Sarah Johnson, Community Historian</span>
+                            <span class="blog-read-time">12 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+
+                    <!-- Article 4: Community Voice -->
+                    <article class="blog-post" data-category="voices">
+                        <div class="blog-header">
+                            <span class="blog-category">Community Voices</span>
+                            <span class="blog-date">June 3, 2025</span>
+                        </div>
+                        <h3 class="blog-title">"My Grandmother's Stories": Growing Up in Sharswood During the Civil Rights Era</h3>
+                        <div class="blog-excerpt">
+                            <p>I'm sharing my grandmother Dolores Washington's stories about living on Cecil B. Moore Avenue during the 1960s. She was there during the Girard College protests, she knew families connected to the Pyramid Club, and she witnessed how this neighborhood became a staging ground for justice. These aren't just memories—they're blueprints for today's organizing...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Marcus Williams, Third-Generation Resident</span>
+                            <span class="blog-read-time">7 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+
+                    <!-- Article 5: Housing Justice -->
+                    <article class="blog-post" data-category="community">
+                        <div class="blog-header">
+                            <span class="blog-category">Community Issues</span>
+                            <span class="blog-date">May 30, 2025</span>
+                        </div>
+                        <h3 class="blog-title">Fighting Displacement: How Historic Designation Can Protect Long-Term Residents</h3>
+                        <div class="blog-excerpt">
+                            <p>Gentrification is real, and we're not ignoring it. This article breaks down how community-controlled historic designation can be a tool FOR residents, not against them. We explore community benefit agreements, tenant protections, and how other neighborhoods have used historic status to fight displacement rather than fuel it...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Sharswood Tenants Union</span>
+                            <span class="blog-read-time">10 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+
+                    <!-- Article 6: Black Panthers -->
+                    <article class="blog-post" data-category="history">
+                        <div class="blog-header">
+                            <span class="blog-category">Revolutionary History</span>
+                            <span class="blog-date">May 28, 2025</span>
+                        </div>
+                        <h3 class="blog-title">Black Panthers in Sharswood: Breakfast Programs, Community Defense, and Revolutionary Love</h3>
+                        <div class="blog-excerpt">
+                            <p>The Black Panthers weren't just about berets and protests—in Sharswood, they ran breakfast programs, organized community defense, and built mutual aid networks that kept families fed and safe. This deep dive explores how revolutionary organizing looked in our neighborhood during the late 1960s and early 70s...</p>
+                        </div>
+                        <div class="blog-meta">
+                            <span class="blog-author">By Revolutionary History Collective</span>
+                            <span class="blog-read-time">15 min read</span>
+                        </div>
+                        <button class="blog-read-more">Read Full Article</button>
+                    </article>
+                </div>
+
+                <!-- Submit Article CTA -->
+                <div style="background: linear-gradient(135deg, #1a1a1a, #3d3d3d); color: white; padding: 2rem; border-radius: 15px; margin: 3rem 0; text-align: center;">
+                    <h3 style="color: #d4af37; margin-bottom: 1rem;">📝 Have a Story to Share?</h3>
+                    <p style="margin-bottom: 1.5rem;">Our community blog thrives on YOUR voices, research, and perspectives. We welcome articles on neighborhood history, community concerns, policy analysis, personal stories, and calls to action.</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 style="color: #f4d03f; margin-bottom: 0.5rem;">We Want:</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem; text-align: left;">
+                                <li>• Personal & family histories</li>
+                                <li>• Policy research & analysis</li>
+                                <li>• Community concerns & solutions</li>
+                                <li>• Historical deep dives</li>
+                                <li>• Artist profiles & cultural stories</li>
+                                <li>• Housing & economic justice pieces</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #f4d03f; margin-bottom: 0.5rem;">Submit:</h4>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem; text-align: left;">
+                                <li>• 500-3000 words</li>
+                                <li>• Photos/documents welcome</li>
+                                <li>• Community review process</li>
+                                <li>• Byline credit given</li>
+                                <li>• All perspectives welcomed</li>
+                                <li>• Collaborative editing offered</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button style="background: #d4af37; color: #1a1a1a; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer;" onclick="openSubmissionForm()">Submit Your Article</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="initiative" class="section">
+            <h2 class="section-title">Historic District Initiative</h2>
+            <div class="section-content">
+                <p>Our historic district nomination represents a crucial step in preserving Sharswood's unique cultural and architectural heritage. This comprehensive initiative aims to secure permanent protection for the buildings, streetscapes, and community spaces that tell the story of African American artistic and intellectual achievement in Philadelphia.</p>
+                
+                <div class="initiative-grid">
+                    <div class="initiative-card">
+                        <div class="card-title">🏛️ Architectural Preservation</div>
+                        <p>Protecting the distinctive 19th and early 20th-century architecture that defines Sharswood's visual character, including row houses, commercial buildings, and community landmarks.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">🎨 Cultural Heritage</div>
+                        <p>Celebrating the neighborhood's role as a center of African American artistic innovation, from Dox Thrash's groundbreaking printmaking to the broader cultural renaissance.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">📚 Educational Legacy</div>
+                        <p>Honoring the intellectual traditions that flourished in Sharswood, creating resources for current and future generations to understand this remarkable history.</p>
+                    </div>
+                    
+                    <div class="initiative-card">
+                        <div class="card-title">🏘️ Community Development</div>
+                        <p>Ensuring that historic designation supports sustainable community development, bringing resources and recognition while maintaining neighborhood character.</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f8f6f3, #e8e4df); padding: 2rem; border-radius: 10px; margin: 2rem 0; border-left: 5px solid #d4af37;">
+                    <h3 style="color: #1a1a1a; margin-bottom: 1rem;">Timeline for Historic District Designation</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;"><strong>Phase 1 (Q2 2025):</strong> Community engagement and documentation</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Phase 2 (Q3 2025):</strong> Formal nomination preparation and submission</li>
+                        <li style="margin-bottom: 0.5rem;"><strong>Phase 3 (Q4 2025):</strong> Review process and public hearings</li>
+                        <li><strong>Phase 4 (Q1 2026):</strong> Final designation and celebration</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="maps" class="section">
+            <h2 class="section-title">Proposed Historic District Boundaries</h2>
+            <div class="section-content">
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <h3>Interactive Map Coming Soon</h3>
+                        <p>Detailed boundary maps and property information will be available here</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem;">Proposed boundaries encompass the core historic blocks of Sharswood, including Cecil B. Moore Avenue, Girard Avenue, and surrounding residential streets</p>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="color: #d4af37; margin-bottom: 1rem;">Key Landmarks</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>• Dox Thrash House (2340 Cecil B. Moore Ave)</li>
+                            <li>• Historic row house blocks</li>
+                            <li>• Community gathering spaces</li>
+                            <li>• Significant architectural examples</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="color: #d4af37; margin-bottom: 1rem;">Boundary Considerations</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>• Architectural cohesion</li>
+                            <li>• Historical significance</li>
+                            <li>• Community input</li>
+                            <li>• Development compatibility</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="engage" class="section">
+            <h2 class="section-title">Join the Movement</h2>
+            <div class="section-content">
+                <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">Your voice, stories, and participation are essential to securing historic district designation for Sharswood. Here's how you can make a difference:</p>
+                
+                <div class="engagement-actions">
+                    <a href="#" class="action-button">📝 Sign the Petition</a>
+                    <a href="#" class="action-button">📅 Attend Community Meetings</a>
+                    <a href="#" class="action-button">📖 Share Your Stories</a>
+                    <a href="#" class="action-button">📧 Contact Officials</a>
+                    <a href="#" class="action-button">📱 Follow Updates</a>
+                    <a href="#" class="action-button">💝 Support the Cause</a>
+                </div>
+
+                <!-- Social Media Integration -->
+                <div style="background: linear-gradient(135deg, #f8f6f3, #ffffff); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #d4af37;">
+                    <h3 style="color: #1a1a1a; text-align: center; margin-bottom: 1.5rem;">📱 Connect & Share</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+                        <div>
+                            <h4 style="color: #d4af37;">Instagram</h4>
+                            <p style="font-size: 0.9rem;">@DoxThrashHouse<br>Share photos with #SharswardHistory</p>
+                            <a href="#" style="color: #1a1a1a; text-decoration: none; font-weight: bold;">Follow Us →</a>
+                        </div>
+                        <div>
+                            <h4 style="color: #d4af37;">Facebook</h4>
+                            <p style="font-size: 0.9rem;">Dox Thrash House Project<br>Join our community page</p>
+                            <a href="#" style="color: #1a1a1a; text-decoration: none; font-weight: bold;">Like Page →</a>
+                        </div>
+                        <div>
+                            <h4 style="color: #d4af37;">Twitter</h4>
+                            <p style="font-size: 0.9rem;">@SharswardHistory<br>Latest updates & news</p>
+                            <a href="#" style="color: #1a1a1a; text-decoration: none; font-weight: bold;">Follow →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Submission Portal -->
+                <div style="background: linear-gradient(135deg, #1a1a1a, #3d3d3d); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3 style="color: #d4af37; text-align: center; margin-bottom: 1.5rem;">📚 Share Your Sharswood History</h3>
+                    <p style="text-align: center; margin-bottom: 1.5rem;">We're actively collecting stories, photos, and memories to build our historic district case. Your contributions matter!</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px;">
+                            <h4 style="color: #f4d03f;">📸 Historical Photos</h4>
+                            <p style="font-size: 0.9rem;">Family photos, street scenes, community events, buildings, people - any images that show Sharswood's history.</p>
+                            <button style="background: #d4af37; color: #1a1a1a; padding: 0.5rem 1rem; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Upload Photos</button>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px;">
+                            <h4 style="color: #f4d03f;">📝 Oral Histories</h4>
+                            <p style="font-size: 0.9rem;">Stories from longtime residents, memories of neighborhood changes, family histories, community traditions.</p>
+                            <button style="background: #d4af37; color: #1a1a1a; padding: 0.5rem 1rem; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Share Stories</button>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px;">
+                            <h4 style="color: #f4d03f;">📄 Documents</h4>
+                            <p style="font-size: 0.9rem;">Deeds, newspaper clippings, programs, flyers, letters - any documents that tell Sharswood's story.</p>
+                            <button style="background: #d4af37; color: #1a1a1a; padding: 0.5rem 1rem; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Submit Documents</button>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <p style="font-size: 0.9rem; opacity: 0.8;">All submissions will be carefully preserved and may be used in our historic district nomination materials and community exhibitions.</p>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #1a1a1a, #3d3d3d); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                    <h3 style="color: #d4af37; text-align: center; margin-bottom: 1rem;">📅 Upcoming Community Events</h3>
+                    <div style="text-align: center;">
+                        <p><strong>Community History Walk</strong><br>
+                        Saturday, June 21, 2025 | 10:00 AM<br>
+                        Meet at Dox Thrash House<br>
+                        <em>Learn about Octavius Catto, Cecil B. Moore, and neighborhood landmarks</em></p>
+                        
+                        <p style="margin-top: 1rem;"><strong>Public Information Session</strong><br>
+                        Thursday, June 26, 2025 | 6:30 PM<br>
+                        Athletic Recreation Center<br>
+                        <em>Historic district process and community input</em></p>
+
+                        <p style="margin-top: 1rem;"><strong>Oral History Collection Day</strong><br>
+                        Saturday, July 5, 2025 | 11:00 AM - 4:00 PM<br>
+                        Community locations<br>
+                        <em>Share your stories with our documentation team</em></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Information</h3>
+                    <p>Dox Thrash House Project<br>
+                    2340 Cecil B. Moore Avenue<br>
+                    Philadelphia, PA 19121</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Stay Connected</h3>
+                    <p>Email: info@doxtrashhouse.org<br>
+                    Phone: (215) XXX-XXXX<br>
+                    Social: @DoxThrashHouse</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Partners</h3>
+                    <p>Beech Community Services<br>
+                    Philadelphia Historical Commission<br>
+                    Community Stakeholders</p>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #444; padding-top: 2rem; text-align: center;">
+                <p>&copy; 2025 Dox Thrash House Project. Preserving history, building community.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll animation to timeline items
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe timeline items
+        document.querySelectorAll('.timeline-content').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(item);
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.initiative-card, .timeline-content').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Dynamic year update
+        const currentYear = new Date().getFullYear();
+        document.querySelector('footer p').innerHTML = 
+            `&copy; ${currentYear} Dox Thrash House Project. Preserving history, building community.`;
+    </script>
+</body>
+</html>
