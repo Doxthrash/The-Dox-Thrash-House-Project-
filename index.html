@@ -1,0 +1,343 @@
+# 📝 Dox Thrash House Website Editing Guide
+
+## 🎯 Quick Navigation
+- [Basic Contact Info](#basic-contact-info)
+- [Adding Timeline Events](#adding-timeline-events)
+- [Updating Event Calendar](#updating-event-calendar)
+- [Adding Blog Posts](#adding-blog-posts)
+- [Social Media Links](#social-media-links)
+- [Changing Text Content](#changing-text-content)
+- [Adding Photos](#adding-photos)
+
+---
+
+## 📞 Basic Contact Info
+
+### Where to find it:
+Look for the `<footer>` section near the bottom of your HTML file.
+
+### What to change:
+```html
+<div class="footer-section">
+    <h3>Contact Information</h3>
+    <p>Dox Thrash House Project<br>
+    2340 Cecil B. Moore Avenue<br>
+    Philadelphia, PA 19121</p>
+</div>
+
+<div class="footer-section">
+    <h3>Stay Connected</h3>
+    <p>Email: info@doxtrashhouse.org<br>
+    Phone: (215) XXX-XXXX<br>
+    Social: @DoxThrashHouse</p>
+</div>
+```
+
+### How to edit:
+- Replace `info@doxtrashhouse.org` with your real email
+- Replace `(215) XXX-XXXX` with your real phone number
+- Replace `@DoxThrashHouse` with your real social media handle
+
+---
+
+## 📅 Adding Timeline Events
+
+### Where to find it:
+Look for `<section id="timeline" class="section">` and find the timeline items inside.
+
+### Template for new events:
+```html
+<div class="timeline-item">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+        <div class="timeline-year">YEAR HERE</div>
+        <h3>EVENT TITLE HERE</h3>
+        <p>EVENT DESCRIPTION HERE...</p>
+    </div>
+</div>
+```
+
+### Example of adding a new event:
+```html
+<div class="timeline-item">
+    <div class="timeline-dot"></div>
+    <div class="timeline-content">
+        <div class="timeline-year">1975</div>
+        <h3>Community Garden Established</h3>
+        <p>Local residents converted vacant lot into thriving community garden, providing fresh food and gathering space for neighborhood families during economic hardship.</p>
+    </div>
+</div>
+```
+
+### Where to insert:
+Add your new timeline item between existing ones, keeping chronological order.
+
+---
+
+## 📅 Updating Event Calendar
+
+### Where to find it:
+Look for "Upcoming Community Events" section inside the engagement area.
+
+### What to change:
+```html
+<p><strong>Community History Walk</strong><br>
+Saturday, June 21, 2025 | 10:00 AM<br>
+Meet at Dox Thrash House<br>
+<em>Learn about Octavius Catto, Cecil B. Moore, and neighborhood landmarks</em></p>
+
+<p style="margin-top: 1rem;"><strong>Public Information Session</strong><br>
+Thursday, June 26, 2025 | 6:30 PM<br>
+Athletic Recreation Center<br>
+<em>Historic district process and community input</em></p>
+```
+
+### How to edit:
+- Change event names in `<strong>` tags
+- Update dates and times
+- Change locations
+- Update descriptions in `<em>` tags
+
+---
+
+## ✍️ Adding Blog Posts
+
+### Where to find it:
+Look for `<div class="blog-grid">` inside the blog section.
+
+### Template for new blog post:
+```html
+<article class="blog-post" data-category="CATEGORY HERE">
+    <div class="blog-header">
+        <span class="blog-category">CATEGORY NAME</span>
+        <span class="blog-date">DATE HERE</span>
+    </div>
+    <h3 class="blog-title">YOUR ARTICLE TITLE</h3>
+    <div class="blog-excerpt">
+        <p>YOUR ARTICLE PREVIEW TEXT HERE...</p>
+    </div>
+    <div class="blog-meta">
+        <span class="blog-author">By YOUR NAME</span>
+        <span class="blog-read-time">X min read</span>
+    </div>
+    <button class="blog-read-more">Read Full Article</button>
+</article>
+```
+
+### Categories to use:
+- `data-category="history"` for historical articles
+- `data-category="community"` for community issues
+- `data-category="arts"` for arts & culture
+- `data-category="voices"` for personal stories
+
+### Example new blog post:
+```html
+<article class="blog-post" data-category="community">
+    <div class="blog-header">
+        <span class="blog-category">Community Issues</span>
+        <span class="blog-date">July 15, 2025</span>
+    </div>
+    <h3 class="blog-title">New Community Center Plans Revealed</h3>
+    <div class="blog-excerpt">
+        <p>The city has released preliminary plans for a new community center in Sharswood. Here's what residents need to know about the proposal and how to get involved in the planning process...</p>
+    </div>
+    <div class="blog-meta">
+        <span class="blog-author">By Maria Rodriguez, Community Organizer</span>
+        <span class="blog-read-time">6 min read</span>
+    </div>
+    <button class="blog-read-more">Read Full Article</button>
+</article>
+```
+
+---
+
+## 📱 Social Media Links
+
+### Where to find it:
+Look for the social media section with Instagram, Facebook, and Twitter.
+
+### What to change:
+```html
+<div>
+    <h4 style="color: #d4af37;">Instagram</h4>
+    <p style="font-size: 0.9rem;">@DoxThrashHouse<br>Share photos with #SharswardHistory</p>
+    <a href="#" style="color: #1a1a1a; text-decoration: none; font-weight: bold;">Follow Us →</a>
+</div>
+```
+
+### How to edit:
+- Replace `@DoxThrashHouse` with your real Instagram handle
+- Replace `#SharswardHistory` with your hashtag
+- Update the JavaScript section to use real social media URLs (see Advanced section)
+
+---
+
+## 📝 Changing Text Content
+
+### Main Hero Text:
+Look for this in the header:
+```html
+<h1>Dox Thrash House Project</h1>
+<div class="subtitle">Preserving Sharswood's Historic Legacy</div>
+<div class="hero-tagline">
+    Leading the initiative to designate Sharswood as Philadelphia's newest Historic District...
+</div>
+```
+
+### Section Descriptions:
+Each section has intro paragraphs you can edit:
+```html
+<p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">
+    Your description text here...
+</p>
+```
+
+### About Dox Thrash:
+Look for `<section id="about" class="section">` to update the artist biography.
+
+---
+
+## 📸 Adding Photos
+
+### Current Structure:
+The website uses placeholder text for images. To add real photos:
+
+### 1. For Background Images:
+Replace the CSS background patterns with real images:
+```css
+background: url('path-to-your-image.jpg');
+```
+
+### 2. For Timeline Images:
+Add images to timeline events:
+```html
+<div class="timeline-content">
+    <img src="path-to-image.jpg" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;" alt="Description">
+    <div class="timeline-year">1950s</div>
+    <h3>Event Title</h3>
+    <p>Description...</p>
+</div>
+```
+
+### 3. For Blog Post Images:
+Add images to blog posts:
+```html
+<div class="blog-excerpt">
+    <img src="path-to-image.jpg" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;" alt="Description">
+    <p>Your article preview...</p>
+</div>
+```
+
+---
+
+## 🔧 Advanced Editing
+
+### Adding Real Social Media Links:
+Find this section in the JavaScript:
+```javascript
+if (linkText.includes('Follow Us') && this.parentElement.querySelector('h4').textContent === 'Instagram') {
+    window.open('https://instagram.com/doxthrashhouse', '_blank'); // Replace with actual Instagram
+}
+```
+
+Replace with your real URLs:
+- `https://instagram.com/YOUR_HANDLE`
+- `https://facebook.com/YOUR_PAGE`
+- `https://twitter.com/YOUR_HANDLE`
+
+### Email Addresses:
+Find and replace these placeholder emails:
+- `info@doxthrashhouse.org`
+- `stories@doxthrashhouse.org`
+- `documents@doxthrashhouse.org`
+- `blog@doxthrashhouse.org`
+
+---
+
+## 🚀 Publishing Changes
+
+### Using GitHub Pages:
+1. Save your edited HTML file
+2. Go to your GitHub repository
+3. Click "Upload files" or edit directly in GitHub
+4. Replace the old file with your new version
+5. Changes will appear on your website within minutes
+
+### Testing Changes:
+Before uploading:
+1. Open your HTML file in a web browser
+2. Test all links and buttons
+3. Check that text displays correctly
+4. Verify mobile responsiveness
+
+---
+
+## 📋 Common Tasks Checklist
+
+### Weekly Updates:
+- [ ] Update event calendar with new dates
+- [ ] Add any new blog posts
+- [ ] Update social media handles if changed
+- [ ] Check that contact information is current
+
+### Monthly Updates:
+- [ ] Add new timeline events as research progresses
+- [ ] Update progress on historic district campaign
+- [ ] Add new community testimonials
+- [ ] Review and update blog categories
+
+### As Needed:
+- [ ] Add new photos and documents
+- [ ] Update petition and fundraising links
+- [ ] Modify color scheme or styling
+- [ ] Add new sections for campaign updates
+
+---
+
+## 🆘 Troubleshooting
+
+### If something breaks:
+1. **Don't panic!** You can always revert to the original file
+2. **Check for typos** in HTML tags (missing `<` or `>`)
+3. **Validate HTML** using online HTML validators
+4. **Test in different browsers** to ensure compatibility
+
+### Common mistakes:
+- **Missing closing tags**: Every `<div>` needs a `</div>`
+- **Broken quotes**: Make sure all quotes are properly closed
+- **Wrong file paths**: Check that image paths are correct
+
+### Getting Help:
+- **GitHub Issues**: Create issues in your repository for community help
+- **Community Forums**: Web development communities are very helpful
+- **Local Tech Groups**: Philadelphia has great tech meetups for support
+
+---
+
+## 📞 Quick Reference
+
+### File Structure:
+```
+your-website.html (main file - edit this one)
+├── Header section (hero text)
+├── Navigation (menu items)
+├── About section (Dox Thrash info)
+├── Timeline section (historical events)
+├── Heroes section (civil rights leaders)
+├── Blog section (articles and stories)
+├── Initiative section (historic district info)
+├── Maps section (boundary information)
+├── Engagement section (community involvement)
+└── Footer (contact information)
+```
+
+### Key Sections to Update Regularly:
+1. **Event Calendar** - Keep community events current
+2. **Blog Posts** - Add new stories and articles
+3. **Timeline** - Include new historical discoveries
+4. **Contact Info** - Ensure people can reach you
+5. **Social Media** - Update handles and hashtags
+
+---
+
+*Remember: This website is a living document that should grow with your historic district campaign. Don't be afraid to experiment and make it your own!* 🏛️✊
